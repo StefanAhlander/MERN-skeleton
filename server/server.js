@@ -1,40 +1,23 @@
-const path = require('path');
-const express = require('express');
-const { MongoClient } = require('mongodb');
-const template = require('../template');
-//comment out before building for production
-const compile = require('./devBundle.js');
 require('dotenv').config();
+import app from './express';
+import mongoose from 'mongoose';
 
-const app = express();
-//comment out before building for production
-compile(app);
+const PORT = process.env.port;
+const mongoUri = process.env.DB_CONNECTION_URI;
 
-const CURRENT_WORKING_DIR = process.cwd();
-app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')));
-
-app.get('/', (req, res) => {
-  res.status(200).send(template());
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
-let port = process.env.PORT || 3000;
-app.listen(port, function onStart(err) {
+mongoose.connection.on('error', () => {
+  throw new Error(`unable to connect to database`);
+});
+
+app.listen(PORT, (err) => {
   if (err) {
     console.log(err);
   }
-  console.info('Server started on port %s.', port);
+  console.info(`Server running on http://localhost:${PORT}`);
 });
-
-// Use connect method to connect to the server
-MongoClient.connect(
-  process.env.DB_CONNECTION_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err, db) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('Connected successfully to mongodb server');
-      db.close();
-    }
-  }
-);
