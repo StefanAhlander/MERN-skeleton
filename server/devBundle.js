@@ -1,3 +1,4 @@
+require('dotenv').config();
 const webpack = require('webpack');
 const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -14,4 +15,4 @@ const compile = (app) => {
   }
 };
 
-module.exports = compile;
+module.exports = { compile };
