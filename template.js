@@ -10,7 +10,7 @@ rel="stylesheet">
         <title>MERN Skeleton</title>
       </head>
       <body>
-        <div id="root">Hello World</div>
+        <div id="root"></div>
         <script src="/dist/bundle.js"></script>
       </body>
     </html>`;
